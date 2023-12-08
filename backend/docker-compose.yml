@@ -1,0 +1,31 @@
+version: '3'
+services:
+  sassy-apple:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3002:3000'
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - sassy-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: sassyapple
+      BROWSER_URL: 'ws://browser:3000'
+      FROM_EMAIL: dev@dhoon.co
+
+  sassy-db:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: sassyapple
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    ports:
+      - '6432:5432'
